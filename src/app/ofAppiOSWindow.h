@@ -149,7 +149,6 @@ public:
 	void setup();
     
     void run(ofBaseApp * appPtr);
-    OF_DEPRECATED_MSG("Use setup(const ofiOSWindowSettings & settings); instead.", virtual void setupOpenGL(int w, int h, ofWindowMode screenMode) );
     static void startAppWithDelegate(string appDelegateClassName);
     void update();
     void draw();
@@ -199,11 +198,7 @@ public:
     
     bool isProgrammableRenderer();
     ofxiOSRendererType getGLESVersion();
-    OF_DEPRECATED_MSG("Use ofiOSWindowSettings to setup programmable renderer by selecting glesVerison to >=2", bool enableRendererES2());
-    OF_DEPRECATED_MSG("Use ofiOSWindowSettings to setup  non-programmable renderer by selecting glesVersion Version to 1", bool enableRendererES1());
-    OF_DEPRECATED_MSG("Use isProgrammableRenderer() or getGLESVersion()", bool isRendererES2());
-    OF_DEPRECATED_MSG("Use isProgrammableRenderer() or getGLESVersion()", bool isRendererES1());
-    
+	
     bool enableRetina(float retinaScale=0);
     bool disableRetina();
     bool isRetinaEnabled();
@@ -232,8 +227,6 @@ protected:
     
     bool hasExited;
 };
-
-OF_DEPRECATED_MSG("ofAppiPhoneWindow is deprecated, use ofAppiOSWindow instead.", typedef ofAppiOSWindow ofAppiPhoneWindow);
 
 
 

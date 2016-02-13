@@ -25,11 +25,7 @@
     currentInterfaceOrientation = pendingInterfaceOrientation = UIInterfaceOrientationPortrait;
     if((self = [super init])) {
         currentInterfaceOrientation = pendingInterfaceOrientation = self.interfaceOrientation;
-		if( [[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending ) {
-			bReadyToRotate  = NO;
-		}else{
-			bReadyToRotate  = YES;
-		}
+		bReadyToRotate  = YES;
         bFirstUpdate    = NO;
 		bAnimated		= NO;
         
@@ -68,15 +64,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    // rotation of the glView only works properly after viewDidAppear.
-    // this is something to do with either the bounds, center or transform properties not being initialised earlier.
-    // so now that glView is ready, we rotate it to the pendingInterfaceOrientation.
-    if( [[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending ) {
-		bReadyToRotate  = YES;
-		bFirstUpdate    = YES;
-		[self rotateToInterfaceOrientation:pendingInterfaceOrientation animated:NO];
-	}
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -179,33 +166,24 @@
 		center.y = screenSize.height * 0.5;
 	}
 	
-	// Is the iOS version less than 8?
-	if( [[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending ) {
-		if(UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-			bounds.size.width = screenSize.height;
-			bounds.size.height = screenSize.width;
-		}
+	// Fixes for iOS 8 Portrait to Landscape issues
+	if((UIInterfaceOrientationIsPortrait(interfaceOrientation) && screenSize.width >= screenSize.height) ||
+	   (UIInterfaceOrientationIsLandscape(interfaceOrientation) && screenSize.height >= screenSize.width)) {
+		bounds.size.width = screenSize.height;
+		bounds.size.height = screenSize.width;
 	} else {
-		// Fixes for iOS 8 Portrait to Landscape issues
-		if((UIInterfaceOrientationIsPortrait(interfaceOrientation) && screenSize.width >= screenSize.height) ||
-		   (UIInterfaceOrientationIsLandscape(interfaceOrientation) && screenSize.height >= screenSize.width)) {
-			bounds.size.width = screenSize.height;
-			bounds.size.height = screenSize.width;
-		} else {
-			bounds.size.width = screenSize.width;
-			bounds.size.height = screenSize.height;
-		}
-		//borg
-		//NSLog(@"w %f h %f",[UIScreen mainScreen].bounds.size.width,[UIScreen mainScreen].bounds.size.height);
-		//assumes Portrait orientation
-		if(screenSize.width>screenSize.height){
-			center.x = screenSize.height * 0.5;
-			center.y = screenSize.width * 0.5;
-		}else{
-			center.x = screenSize.width * 0.5;
-			center.y = screenSize.height * 0.5;
-		}
-		//NSLog(@"rotating to portrait %i, is portrait %i, currentInterfaceOrientation %i, bound: w %f h %f",UIInterfaceOrientationIsPortrait(interfaceOrientation),UIInterfaceOrientationIsPortrait(self.interfaceOrientation),UIInterfaceOrientationIsPortrait(currentInterfaceOrientation),bounds.size.width,bounds.size.height);
+		bounds.size.width = screenSize.width;
+		bounds.size.height = screenSize.height;
+	}
+	//borg
+	//NSLog(@"w %f h %f",[UIScreen mainScreen].bounds.size.width,[UIScreen mainScreen].bounds.size.height);
+	//assumes Portrait orientation
+	if(screenSize.width>screenSize.height){
+		center.x = screenSize.height * 0.5;
+		center.y = screenSize.width * 0.5;
+	}else{
+		center.x = screenSize.width * 0.5;
+		center.y = screenSize.height * 0.5;
 	}
 	
     float rot1 = [self rotationForOrientation:currentInterfaceOrientation];
@@ -272,20 +250,9 @@
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
 
     CGPoint center;
-    // Is the iOS version less than 8?
-    if( [[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending ) {
-        if(UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
-            center.x = screenSize.height * 0.5;
-            center.y = screenSize.width * 0.5;
-        } else {
-            center.x = screenSize.width * 0.5;
-            center.y = screenSize.height * 0.5;
-        }
-    } else {
-        center.x = screenSize.width * 0.5;
-        center.y = screenSize.height * 0.5;
-    }
-    
+	center.x = screenSize.width * 0.5;
+	center.y = screenSize.height * 0.5;
+	
 	if(bAnimated) {
 		NSTimeInterval duration = 0.3;
 		[self.glView.layer removeAllAnimations];

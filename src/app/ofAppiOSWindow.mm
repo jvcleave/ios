@@ -105,11 +105,6 @@ void ofAppiOSWindow::setup() {
 	hasExited = false;
 }
 
-//----------------------------------------------------------------------------------- opengl setup.
-void ofAppiOSWindow::setupOpenGL(int w, int h, ofWindowMode screenMode) {
-	settings.windowMode = screenMode; // use this as flag for displaying status bar or not
-    setup(settings);
-}
 
 void ofAppiOSWindow::loop() {
     startAppWithDelegate("ofxiOSAppDelegate");
@@ -284,24 +279,7 @@ bool ofAppiOSWindow::disableOrientationAnimation() {
     return (settings.enableHardwareOrientationAnimation = false);
 }
 
-//-----------------------------------------------------------------------------------
-bool ofAppiOSWindow::enableRendererES2() {
-    if(isRendererES2() == true) {
-        return false;
-    }
-    shared_ptr<ofBaseRenderer>renderer (new ofGLProgrammableRenderer(this));
-    ofSetCurrentRenderer(renderer);
-    return true;
-}
 
-bool ofAppiOSWindow::enableRendererES1() {
-    if(isRendererES1() == true) {
-        return false;
-    }
-    shared_ptr<ofBaseRenderer> renderer(new ofGLRenderer(this));
-    ofSetCurrentRenderer(renderer);
-    return true;
-}
 
 
 bool ofAppiOSWindow::isProgrammableRenderer() {
@@ -310,14 +288,6 @@ bool ofAppiOSWindow::isProgrammableRenderer() {
 
 ofxiOSRendererType ofAppiOSWindow::getGLESVersion() {
     return (ofxiOSRendererType)settings.glesVersion;
-}
-
-bool ofAppiOSWindow::isRendererES2() {
-    return (isProgrammableRenderer() && settings.glesVersion == 2);
-}
-
-bool ofAppiOSWindow::isRendererES1() {
-    return !isProgrammableRenderer();
 }
 
 //-----------------------------------------------------------------------------------

@@ -91,29 +91,7 @@
     bool bDoesHWOrientation = ofxiOSGetOFWindow()->doesHWOrientation();
     
     UIInterfaceOrientation iOrient  = [[UIApplication sharedApplication] statusBarOrientation];
-    // is the os version less than 6.0? 
-    if( [[[UIDevice currentDevice] systemVersion] compare:@"6.0" options:NSNumericSearch] == NSOrderedAscending ) {
-		iOrient = UIInterfaceOrientationPortrait;
-		
-        UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
-        switch (deviceOrientation) {
-            case UIDeviceOrientationPortrait:
-                iOrient = UIInterfaceOrientationPortrait;
-                break;
-            case UIDeviceOrientationPortraitUpsideDown:
-                iOrient = UIInterfaceOrientationPortraitUpsideDown;
-                break;
-            case UIDeviceOrientationLandscapeLeft:
-                iOrient = UIInterfaceOrientationLandscapeRight;
-                break;
-            case UIDeviceOrientationLandscapeRight:
-                iOrient = UIInterfaceOrientationLandscapeLeft;
-                break;
-            default:
-                iOrient = UIInterfaceOrientationPortrait;
-                break;
-        }
-    }
+	
     
     BOOL bIsPortrait = UIInterfaceOrientationIsPortrait( iOrient );
 	
@@ -212,16 +190,7 @@
 - (void)receivedRotate:(NSNotification*)notification {
 	UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
     ofLogVerbose("ofxiOSAppDelegate") << "device orientation changed to " << deviceOrientation;
-	if( [[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending ) {
-		//iOS7-
-		if(deviceOrientation != UIDeviceOrientationUnknown && deviceOrientation != UIDeviceOrientationFaceUp && deviceOrientation != UIDeviceOrientationFaceDown ) {
-			if([self.glViewController isReadyToRotate]) {
-            ofxiOSAlerts.deviceOrientationChanged( deviceOrientation );
-			}
-		}
-	}else {
-        ofxiOSAlerts.deviceOrientationChanged( deviceOrientation );
-    }
+	ofxiOSAlerts.deviceOrientationChanged( deviceOrientation );
 }
 
 //------------------------------------------------------------------------------------------- external display.

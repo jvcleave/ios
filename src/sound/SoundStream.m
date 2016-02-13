@@ -35,21 +35,7 @@
         numOfBuffers = 1; // always 1.
         audioUnit = nil;
         bInterruptedWhileRunning = NO;
-		
-    #ifdef __IPHONE_6_0
-		if([SoundStream shouldUseAudioSessionNotifications]) {
-			[[NSNotificationCenter defaultCenter] addObserver:self
-													 selector:@selector(handleInterruption:)
-														 name:AVAudioSessionInterruptionNotification
-													   object:nil];
-		} else {
-     #endif
-    
-        [[AVAudioSession sharedInstance] setDelegate:self];
-    
-    #ifdef __IPHONE_6_0
-		}
-    #endif 
+		[[AVAudioSession sharedInstance] setDelegate:self];
     
     }
     return self;
@@ -57,21 +43,7 @@
 
 - (void)dealloc {
     [super dealloc];
-	
-    #ifdef __IPHONE_6_0
-	if([SoundStream shouldUseAudioSessionNotifications]) {
-		[[NSNotificationCenter defaultCenter] removeObserver:self
-														name:AVAudioSessionInterruptionNotification
-													  object:nil];
-	} else {
-    #endif
-    
-		[[AVAudioSession sharedInstance] setDelegate:nil];
-	
-    
-    #ifdef __IPHONE_6_0
-    }
-    #endif
+    [[AVAudioSession sharedInstance] setDelegate:nil];
     
 }
 
@@ -159,11 +131,6 @@
 	if([self.delegate respondsToSelector:@selector(soundStreamEndInterruption:)]) {
 		[self.delegate soundStreamEndInterruption:self];
 	}
-}
-
-// iOS 5- needs a delegate for Audio Session interruptions, iOS 6+ can use notifications
-+ (BOOL) shouldUseAudioSessionNotifications {
-	return [[[UIDevice currentDevice] systemVersion] floatValue] >= 6;
 }
 
 #pragma mark - Error Handling

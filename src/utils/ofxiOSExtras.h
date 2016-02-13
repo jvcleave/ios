@@ -134,9 +134,6 @@ void ofxiOSUnlockGLContext();
 void ofxiOSEnableLoopInThread();
 
 
-OF_DEPRECATED_MSG("ofxiOSSetOrientation is deprecated, use ofSetOrientation instead.", void ofxiOSSetOrientation(ofOrientation orientation));
-OF_DEPRECATED_MSG("ofxiOSGetOrientation is deprecated, use ofGetOrientation instead.", UIDeviceOrientation ofxiOSGetOrientation());
-
 
 // load an image from the app bundle into a texture
 // NOTE: renamed this function to something more clearer

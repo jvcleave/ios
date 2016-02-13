@@ -126,33 +126,28 @@
 		width	= 480;
 		height	= 360;	
 		
-		if(ofxiOSGetDeviceRevision() == ofxiOS_DEVICE_IPHONE_3G) {
-			width = 400;
-			height = 304;
+		if( w == 640 && h == 480 ){
+			preset = AVCaptureSessionPreset640x480;
+			width	= w;
+			height	= h;
 		}
-		else {
-			if( w == 640 && h == 480 ){
-				preset = AVCaptureSessionPreset640x480;
-				width	= w;
-				height	= h;
-			}
-			else if( w == 1280 && h == 720 ){
-				preset = AVCaptureSessionPreset1280x720;
-				width	= w;
-				height	= h;		
-			}
-			else if( w == 1920 && h == 1080 ){
-				preset = AVCaptureSessionPreset1920x1080;
-				width	= w;
-				height	= h;
-			}
-			else if( w == 192 && h == 144 ){
-				preset = AVCaptureSessionPresetLow;
-				width	= w;
-				height	= h;		
-			}
+		else if( w == 1280 && h == 720 ){
+			preset = AVCaptureSessionPreset1280x720;
+			width	= w;
+			height	= h;
 		}
-		[self.captureSession setSessionPreset:preset]; 
+		else if( w == 1920 && h == 1080 ){
+			preset = AVCaptureSessionPreset1920x1080;
+			width	= w;
+			height	= h;
+		}
+		else if( w == 192 && h == 144 ){
+			preset = AVCaptureSessionPresetLow;
+			width	= w;
+			height	= h;
+		}
+
+		[self.captureSession setSessionPreset:preset];
 		
 		// We add input and output
 		[self.captureSession addInput:captureInput];

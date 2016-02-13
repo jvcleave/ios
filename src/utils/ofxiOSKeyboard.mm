@@ -126,18 +126,6 @@ string ofxiOSKeyboard::getText()
 	}
 }
 
-//--------------------------------------------------------------
-string ofxiOSKeyboard::getLabelText()
-{
-	if([keyboard getLabelText] == nil)
-	{
-		return "";
-	}
-	else
-	{
-		return string([keyboard getLabelText]);
-	}
-}
 
 void ofxiOSKeyboard::openKeyboard()
 {

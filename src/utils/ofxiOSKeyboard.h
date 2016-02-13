@@ -68,7 +68,6 @@ public:
 	void setMaxChars(int max);
 	
 	string getText();
-    OF_DEPRECATED_MSG("Use getText() instead.", string getLabelText());
 	bool isKeyboardShowing();
 	
     UITextField * getKeyboardTextField();

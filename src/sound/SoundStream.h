@@ -61,6 +61,5 @@ typedef enum {
 - (void)reportError:(NSError *)error;
 
 - (void)configureAudioSession;
-+ (BOOL)shouldUseAudioSessionNotifications;
 
 @end

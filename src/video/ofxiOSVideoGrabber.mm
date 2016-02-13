@@ -97,21 +97,3 @@ void ofxiOSVideoGrabber::update() {
     }
 }
 
-//-------------------------------------------------------------- DEPRECATED.
-bool ofxiOSVideoGrabber::initGrabber(int w, int h) {
-    ofLogWarning("ofxiOSVideoGrabber") << "initGrabber(int w, int h) is deprecated, use setup(int w, int h) instead.";
-    return setup(w, h);
-}
-
-void ofxiOSVideoGrabber::getDeviceList() const {
-    ofLogWarning("ofxiOSVideoGrabber") << "getDeviceList() is deprecated, use listDevices() instead.";
-};
-
-ofPixels& ofxiOSVideoGrabber::getPixelsRef(){
-	return getPixels();
-}
-
-const ofPixels& ofxiOSVideoGrabber::getPixelsRef() const{
-	return getPixels();
-}
-

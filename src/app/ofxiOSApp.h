@@ -48,5 +48,3 @@ public:
 
 };
 
-OF_DEPRECATED_MSG("ofxiPhoneApp is deprecated, use ofxiOSApp instead.", typedef ofxiOSApp ofxiPhoneApp);
-

@@ -589,20 +589,4 @@ void * ofxiOSVideoPlayer::getAVFoundationVideoPlayer() {
     return videoPlayer;
 }
 
-//---------------------------------------- DEPRECATED.
-bool ofxiOSVideoPlayer::loadMovie(string name) {
-    return load(name);
-}
-
-ofPixels & ofxiOSVideoPlayer::getPixelsRef() {
-    return getPixels();
-}
-
-const ofPixels & ofxiOSVideoPlayer::getPixelsRef() const {
-    return getPixels();
-}
-
-ofTexture * ofxiOSVideoPlayer::getTexture() {
-    return getTexturePtr();
-}
 
