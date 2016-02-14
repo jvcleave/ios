@@ -188,28 +188,12 @@ bool ofxiOSSoundStream::setMixWithOtherApps(bool bMix){
 	AVAudioSession * audioSession = [AVAudioSession sharedInstance];
 	bool success = false;
 	
-    #ifdef __IPHONE_6_0
-	if(bMix) {
-		if([audioSession respondsToSelector:@selector(setCategory:withOptions:error:)]) {
-			if([audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
-							 withOptions:AVAudioSessionCategoryOptionMixWithOthers
-								   error:nil]) {
-				success = true;
-			}
-		}
-	} else {
-    #endif
-    
-		// this is the default category + options setup
-		// Note: using a sound input stream will set the category to PlayAndRecord
-		if([audioSession setCategory:AVAudioSessionCategorySoloAmbient error:nil]) {
-			success = true;
-		}
-        
-    #ifdef __IPHONE_6_0
+	// this is the default category + options setup
+	// Note: using a sound input stream will set the category to PlayAndRecord
+	if([audioSession setCategory:AVAudioSessionCategorySoloAmbient error:nil]) {
+		success = true;
 	}
-    #endif
-    
+	
 	if(!success) {
 		ofLogError("ofxiOSSoundStream") << "setMixWithOtherApps(): couldn't set app audio session category";
 	}

@@ -346,7 +346,8 @@ bool ofxiOSImagePicker::getImageUpdated(){
     
     _imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
     _imagePicker.showsCameraControls = NO;
-    _imagePicker.wantsFullScreenLayout = YES;
+	_imagePicker.edgesForExtendedLayout = UIRectEdgeAll;
+
     _imagePicker.cameraViewTransform = cameraViewTransform;
     _imagePicker.cameraOverlayView = overlay;
     [[[UIApplication sharedApplication] keyWindow] addSubview:_imagePicker.view];
@@ -357,7 +358,7 @@ bool ofxiOSImagePicker::getImageUpdated(){
 //--------------------------------------------------------------
 - (void) hideCameraOverlay {
 	_imagePicker.showsCameraControls = YES;
-	_imagePicker.wantsFullScreenLayout = NO;
+	_imagePicker.edgesForExtendedLayout = UIRectEdgeNone;
 	_imagePicker.cameraViewTransform = CGAffineTransformScale(_imagePicker.cameraViewTransform, 1, 1);
 	_imagePicker.cameraOverlayView = nil;
     

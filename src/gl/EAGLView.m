@@ -190,13 +190,41 @@ andPreferedRenderer:(ESRendererVersion)version
 }
 	
 - (void)layoutSubviews{
-    [self updateScaleFactor];
+	
 
-    [renderer startRender];
-    [renderer resizeFromLayer:(CAEAGLLayer*)self.layer];
-    [renderer finishRender];
-    
-    [self notifyResized];
+	BOOL needsResized = NO;
+	if (previousBounds.origin.x != self.layer.bounds.origin.x)
+	{
+		needsResized = YES;
+	}
+	if (previousBounds.origin.y != self.layer.bounds.origin.y)
+	{
+		needsResized = YES;
+	}
+	if (previousBounds.size.width != self.layer.bounds.size.width)
+	{
+		needsResized = YES;
+	}
+	if (previousBounds.size.height != self.layer.bounds.size.height)
+	{
+		needsResized = YES;
+	}
+	needsResized = YES;
+	if(needsResized)
+	{
+		[self updateScaleFactor];
+		previousBounds = self.layer.bounds;
+		[renderer startRender];
+		NSLog(@"self.layer.bounds.origin.x:  %f", self.layer.bounds.origin.x);
+		NSLog(@"self.layer.bounds.origin.y:  %f", self.layer.bounds.origin.y);
+		NSLog(@"self.layer.bounds.size.width:  %f", self.layer.bounds.size.width);
+		NSLog(@"self.layer.bounds.size.height:  %f", self.layer.bounds.size.height);
+		[renderer resizeFromLayer:(CAEAGLLayer*)self.layer];
+		[renderer finishRender];
+		
+		[self notifyResized];
+	}
+
 }
 
 //-------------------------------------------------------------------

@@ -55,6 +55,7 @@ static ofxiOSEAGLView * _instanceRef = nil;
         _instanceRef = self;
         
         app = shared_ptr<ofxiOSApp>(appPtr);
+		ofxiOSAlerts.addListener(app.get());
         activeTouches = [[NSMutableDictionary alloc] init];
                 
         screenSize = new ofVec3f();
@@ -95,7 +96,7 @@ static ofxiOSEAGLView * _instanceRef = nil;
 		static_cast<ofGLRenderer*>(window->renderer().get())->setup();
 	}
 	
-	ofxiOSAlerts.addListener(app.get());
+	//ofxiOSAlerts.addListener(app.get());
 	
 	ofDisableTextureEdgeHack();
 	
@@ -142,8 +143,7 @@ static ofxiOSEAGLView * _instanceRef = nil;
     [super layoutSubviews];
     [self updateDimensions];
     
-    [super notifyResized];
-    window->events().notifyWindowResized(ofGetWidth(), ofGetHeight());
+	
 }
 
 - (void)updateDimensions {
@@ -160,6 +160,11 @@ static ofxiOSEAGLView * _instanceRef = nil;
 - (void)notifyResized {
     // blank this.
     // we want to notifyResized at the end of layoutSubviews.
+	
+	[super notifyResized];
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	window->events().notifyWindowResized(w, h);
 }
 
 - (void)drawView {

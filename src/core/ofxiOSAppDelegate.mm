@@ -132,7 +132,7 @@
 		}
 		
         if(!bDoesHWOrientation) {
-            [self.glViewController rotateToInterfaceOrientation:UIInterfaceOrientationPortrait animated:false];
+            [self.glViewController rotateToInterfaceOrientation:interfaceOrientation animated:YES];
 		} else {
             [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation animated:NO];
             [self.glViewController rotateToInterfaceOrientation:interfaceOrientation animated:false];
@@ -179,12 +179,6 @@
 	return YES;
 }
 
-//-------------------------------------------------------------------------------------------
-#ifdef __IPHONE_6_0
--(NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    return UIInterfaceOrientationMaskAll;
-}
-#endif
 
 //------------------------------------------------------------------------------------------- device rotation callback.
 - (void)receivedRotate:(NSNotification*)notification {

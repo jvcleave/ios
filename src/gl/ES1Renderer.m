@@ -136,7 +136,7 @@
 		NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
 		return NO;
 	}
-	
+	NSLog(@"backingWidth: %d backingHeight: %d", backingWidth, backingHeight);
 	return YES;
 }
 

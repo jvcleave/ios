@@ -35,7 +35,12 @@
         numOfBuffers = 1; // always 1.
         audioUnit = nil;
         bInterruptedWhileRunning = NO;
-		[[AVAudioSession sharedInstance] setDelegate:self];
+		//[[AVAudioSession sharedInstance] setDelegate:self];
+		
+		[[NSNotificationCenter defaultCenter] addObserver: self
+												 selector:    @selector(handleInterruption:)
+													 name:        AVAudioSessionInterruptionNotification
+												   object:      [AVAudioSession sharedInstance]];
     
     }
     return self;
@@ -43,8 +48,14 @@
 
 - (void)dealloc {
     [super dealloc];
-    [[AVAudioSession sharedInstance] setDelegate:nil];
-    
+    //[[AVAudioSession sharedInstance] setDelegate:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+#if 0
+											 selector:    @selector(handleInterruption:)
+												 name:        AVAudioSessionInterruptionNotification
+											   object:      [AVAudioSession sharedInstance]];
+#endif
+	
 }
 
 - (void)start {
@@ -80,13 +91,8 @@
 			audioSessionError = nil;
 		}
 		trueSampleRate = [audioSession sampleRate];
-	} else if([audioSession respondsToSelector:@selector(setPreferredHardwareSampleRate:error:)]) {
-		if(![audioSession setPreferredHardwareSampleRate:sampleRate error:&audioSessionError]) {
-			[self reportError:audioSessionError];
-			audioSessionError = nil;
-		}
-		trueSampleRate = [audioSession currentHardwareSampleRate];
 	}
+	
 	sampleRate = trueSampleRate;
 	
 	// setting buffer size
@@ -100,15 +106,13 @@
 #pragma mark - Interruptions
 
 - (void) handleInterruption:(NSNotification *)notification {
-    #ifdef __IPHONE_6_0
-        NSUInteger interruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
-        
-        if(interruptionType == AVAudioSessionInterruptionTypeBegan) {
-            [self beginInterruption];
-        } else if(interruptionType == AVAudioSessionInterruptionTypeEnded) {
-            [self endInterruption];
-        }
-    #endif
+	NSUInteger interruptionType = [notification.userInfo[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
+	
+	if(interruptionType == AVAudioSessionInterruptionTypeBegan) {
+		[self beginInterruption];
+	} else if(interruptionType == AVAudioSessionInterruptionTypeEnded) {
+		[self endInterruption];
+	}
 }
 
 - (void)beginInterruption {

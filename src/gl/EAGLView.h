@@ -49,7 +49,7 @@
 {
 @public
     id<EAGLViewDelegate> delegate;
-    
+	CGRect previousBounds;
 @protected
     id <ESRenderer> renderer;
     CGFloat scaleFactor;

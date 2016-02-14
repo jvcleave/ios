@@ -21,6 +21,7 @@ class ofxiOSApp;
 - (void)rotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
                             animated:(BOOL)animated;
 - (BOOL)isReadyToRotate;
+- (void)fixFBO:(CGSize)size;
 
 @end
 

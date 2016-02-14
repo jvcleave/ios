@@ -328,7 +328,7 @@ static const NSString * ItemStatusContext;
     }
     
     //------------------------------------------------------------ add audio output.
-    double preferredHardwareSampleRate = [[AVAudioSession sharedInstance] currentHardwareSampleRate];
+    double preferredHardwareSampleRate = [[AVAudioSession sharedInstance] sampleRate];
     
     AudioChannelLayout channelLayout;
     bzero(&channelLayout, sizeof(channelLayout));
@@ -343,12 +343,10 @@ static const NSString * ItemStatusContext;
     audioOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                            [NSNumber numberWithInt:kAudioFormatLinearPCM], AVFormatIDKey,
                            [NSNumber numberWithFloat:preferredHardwareSampleRate], AVSampleRateKey,
-#ifdef IS_OS_6_OR_LATER
                            // including AVNumberOfChannelsKey & AVChannelLayoutKey on iOS5 causes a crash,
                            // check if iOS6 or greater before including these.
                            [NSNumber numberWithInt:numOfChannels], AVNumberOfChannelsKey,
                            [NSData dataWithBytes:&channelLayout length:sizeof(AudioChannelLayout)], AVChannelLayoutKey,
-#endif
                            [NSNumber numberWithInt:16], AVLinearPCMBitDepthKey,
                            [NSNumber numberWithBool:NO], AVLinearPCMIsNonInterleaved,
                            [NSNumber numberWithBool:NO], AVLinearPCMIsFloatKey,

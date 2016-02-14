@@ -55,36 +55,32 @@
 		// We set the device
 		device = [devices objectAtIndex:deviceID];
 		
-		// iOS 7+ way of dealing with framerates.
-        if(IS_IOS_7_OR_LATER) {
-            #ifdef __IPHONE_7_0
-			NSError *error = nil;
-			[device lockForConfiguration:&error];
-			if(!error) {
-				NSArray * supportedFrameRates = device.activeFormat.videoSupportedFrameRateRanges;
-				float minFrameRate = 1;
-				float maxFrameRate = 1;
-				for(AVFrameRateRange * range in supportedFrameRates) {
-					minFrameRate = range.minFrameRate;
-					maxFrameRate = range.maxFrameRate;
-					break;
-				}
-				if(framerate < minFrameRate) {
-					NSLog(@"iOSVideoGrabber: Framerate set is less than minimum. Setting to Minimum");
-					framerate = minFrameRate;
-				}
-				if(framerate > maxFrameRate) {
-					NSLog(@"iOSVideoGrabber: Framerate set is greater than maximum. Setting to Maximum");
-					framerate = maxFrameRate;
-				}
-				device.activeVideoMinFrameDuration = CMTimeMake(1, framerate);
-				device.activeVideoMaxFrameDuration = CMTimeMake(1, framerate);
-				[device unlockForConfiguration];
-			} else {
-				NSLog(@"iOSVideoGrabber Init Error: %@", error);
+		NSError *error = nil;
+		[device lockForConfiguration:&error];
+		if(!error) {
+			NSArray * supportedFrameRates = device.activeFormat.videoSupportedFrameRateRanges;
+			float minFrameRate = 1;
+			float maxFrameRate = 1;
+			for(AVFrameRateRange * range in supportedFrameRates) {
+				minFrameRate = range.minFrameRate;
+				maxFrameRate = range.maxFrameRate;
+				break;
 			}
-            #endif
-        }
+			if(framerate < minFrameRate) {
+				NSLog(@"iOSVideoGrabber: Framerate set is less than minimum. Setting to Minimum");
+				framerate = minFrameRate;
+			}
+			if(framerate > maxFrameRate) {
+				NSLog(@"iOSVideoGrabber: Framerate set is greater than maximum. Setting to Maximum");
+				framerate = maxFrameRate;
+			}
+			device.activeVideoMinFrameDuration = CMTimeMake(1, framerate);
+			device.activeVideoMaxFrameDuration = CMTimeMake(1, framerate);
+			[device unlockForConfiguration];
+		} else {
+			NSLog(@"iOSVideoGrabber Init Error: %@", error);
+		}
+
 
 		// We setup the input
 		captureInput						= [AVCaptureDeviceInput 
@@ -159,20 +155,6 @@
 		// we are not able to process more than 10 frames per second.
 		// Called after added to captureSession
         
-        if(IS_IOS_7_OR_LATER == false) {
-            if(IS_IOS_6_OR_LATER) {
-                #ifdef __IPHONE_6_0
-                AVCaptureConnection *conn = [captureOutput connectionWithMediaType:AVMediaTypeVideo];
-                if ([conn isVideoMinFrameDurationSupported] == YES &&
-                    [conn isVideoMaxFrameDurationSupported] == YES) { // iOS 6+
-                        [conn setVideoMinFrameDuration:CMTimeMake(1, framerate)];
-                        [conn setVideoMaxFrameDuration:CMTimeMake(1, framerate)];
-                }
-                #endif
-            } else { // iOS 5 or earlier
-                [captureOutput setMinFrameDuration:CMTimeMake(1, framerate)];
-            }
-        }
 		// We start the capture Session
 		[self.captureSession commitConfiguration];		
 		[self.captureSession startRunning];

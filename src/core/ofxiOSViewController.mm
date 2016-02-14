@@ -22,9 +22,10 @@
 @synthesize glView;
 
 - (id)initWithFrame:(CGRect)frame app:(ofxiOSApp *)app {
-    currentInterfaceOrientation = pendingInterfaceOrientation = UIInterfaceOrientationPortrait;
+	currentInterfaceOrientation = pendingInterfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     if((self = [super init])) {
-        currentInterfaceOrientation = pendingInterfaceOrientation = self.interfaceOrientation;
+		currentInterfaceOrientation = pendingInterfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation]
+;
 		bReadyToRotate  = YES;
         bFirstUpdate    = NO;
 		bAnimated		= NO;
@@ -166,6 +167,7 @@
 		center.y = screenSize.height * 0.5;
 	}
 	
+	
 	// Fixes for iOS 8 Portrait to Landscape issues
 	if((UIInterfaceOrientationIsPortrait(interfaceOrientation) && screenSize.width >= screenSize.height) ||
 	   (UIInterfaceOrientationIsLandscape(interfaceOrientation) && screenSize.height >= screenSize.width)) {
@@ -176,7 +178,7 @@
 		bounds.size.height = screenSize.height;
 	}
 	//borg
-	//NSLog(@"w %f h %f",[UIScreen mainScreen].bounds.size.width,[UIScreen mainScreen].bounds.size.height);
+	NSLog(@"w %f h %f",[UIScreen mainScreen].bounds.size.width,[UIScreen mainScreen].bounds.size.height);
 	//assumes Portrait orientation
 	if(screenSize.width>screenSize.height){
 		center.x = screenSize.height * 0.5;
@@ -185,7 +187,6 @@
 		center.x = screenSize.width * 0.5;
 		center.y = screenSize.height * 0.5;
 	}
-	
     float rot1 = [self rotationForOrientation:currentInterfaceOrientation];
     float rot2 = [self rotationForOrientation:interfaceOrientation];
     float rot3 = rot2 - rot1;
@@ -271,7 +272,9 @@
 //http://stackoverflow.com/questions/25935006/ios8-interface-rotation-methods-not-called
 
 //borg
-#ifdef __IPHONE_8_0
+//#ifdef __IPHONE_8_0
+#if 0
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 
 	CGPoint center;
@@ -295,6 +298,22 @@
 	}
 }
 #endif
+- (void)fixFBO:(CGSize)size
+{
+	CGPoint center;
+	
+	center.x = size.width * 0.5;
+	center.y = size.height * 0.5;
+	
+	NSTimeInterval duration = 0.3;
+	[self.glView.layer removeAllAnimations];
+	[UIView animateWithDuration:duration animations:^{
+		self.glView.center = center;
+		self.glView.transform = CGAffineTransformMakeRotation(0);
+		self.glView.frame = CGRectMake(0, 0, size.width,size.height);
+	}];
+}
+
 
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -310,7 +329,7 @@
 }
 
 //-------------------------------------------------------------- iOS6.
-#ifdef __IPHONE_6_0
+#if 0
 - (NSUInteger)supportedInterfaceOrientations {
     switch (currentInterfaceOrientation) {
         case UIInterfaceOrientationPortrait:
@@ -340,10 +359,6 @@
     return bReadyToRotate;
 }
 
-#ifdef __IPHONE_7_0
--(BOOL)prefersStatusBarHidden{
-	return YES;
-}
-#endif
+
 
 @end
