@@ -191,7 +191,7 @@ andPreferedRenderer:(ESRendererVersion)version
 	
 - (void)layoutSubviews{
 	
-
+	
 	BOOL needsResized = NO;
 	if (previousBounds.origin.x != self.layer.bounds.origin.x)
 	{
@@ -212,6 +212,7 @@ andPreferedRenderer:(ESRendererVersion)version
 	needsResized = YES;
 	if(needsResized)
 	{
+		[self lockGL];
 		[self updateScaleFactor];
 		previousBounds = self.layer.bounds;
 		[renderer startRender];
@@ -219,10 +220,21 @@ andPreferedRenderer:(ESRendererVersion)version
 		NSLog(@"self.layer.bounds.origin.y:  %f", self.layer.bounds.origin.y);
 		NSLog(@"self.layer.bounds.size.width:  %f", self.layer.bounds.size.width);
 		NSLog(@"self.layer.bounds.size.height:  %f", self.layer.bounds.size.height);
-		[renderer resizeFromLayer:(CAEAGLLayer*)self.layer];
+		BOOL result = [renderer resizeFromLayer:(CAEAGLLayer*)self.layer];
 		[renderer finishRender];
 		
-		[self notifyResized];
+		if(result)
+		{
+			[self unlockGL];
+			[self notifyResized];
+		}else
+		{
+			
+			NSLog(@"failed: ");
+			[self unlockGL];
+
+		}
+		
 	}
 
 }

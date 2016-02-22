@@ -34,18 +34,7 @@
 	}
 	[[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: nil];
 	UInt32 doSetProperty = 1;
-	
-	AVAudioSession *session = [AVAudioSession sharedInstance];
-	
-	NSError *setCategoryError = nil;
-	if (![session setCategory:AVAudioSessionCategoryPlayback
-				  withOptions:AVAudioSessionCategoryOptionMixWithOthers
-						error:&setCategoryError]) {
-		// handle error
-	}
-	/*
 	AudioSessionSetProperty (kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(doSetProperty), &doSetProperty);
-	 */
 	[[AVAudioSession sharedInstance] setActive: YES error: nil];
 	audioSessionSetup = YES;
 }

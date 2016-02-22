@@ -14,7 +14,7 @@ ofxiOSVideoPlayer::ofxiOSVideoPlayer() {
     bResetPixels = false;
     bUpdatePixels = false;
     bUpdateTexture = false;
-    bTextureCacheSupported = (&CVOpenGLESTextureCacheCreate != NULL);
+    bTextureCacheSupported = (CVOpenGLESTextureCacheCreate != NULL);
     bTextureCacheEnabled = true;
 }
 
@@ -50,7 +50,7 @@ bool ofxiOSVideoPlayer::load(string name) {
     
     if(bTextureCacheSupported == true && bTextureCacheEnabled == true) {
         if(_videoTextureCache == NULL) {
-#if 1
+#ifdef __IPHONE_6_0
             CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault,
                                                         NULL,
                                                         ofxiOSGetGLView().context,
@@ -228,15 +228,17 @@ ofPixels & ofxiOSVideoPlayer::getPixels() {
     
     } else if(pixelFormat == OF_PIXELS_RGB) {
         
-        if(imageBufferPixelFormat == kCVPixelFormatType_32ARGB)
-		{
+        if(imageBufferPixelFormat == kCVPixelFormatType_32ARGB) {
             
             err = vImageConvert_ARGB8888toRGB888(&src, &dest, 0);
             
-        } else if(imageBufferPixelFormat == kCVPixelFormatType_32BGRA)
-		{
+        } else if(imageBufferPixelFormat == kCVPixelFormatType_32BGRA) {
             
-			err = vImageConvert_BGRA8888toRGB888(&src, &dest, 0);
+#ifdef __IPHONE_6_0
+            err = vImageConvert_BGRA8888toRGB888(&src, &dest, 0);
+#else
+            ofLogError("ofxiOSVideoPlayer::getPixels()") << "OF_PIXELS_RGB is not supported, use setPixelFormat() to set the pixel format to OF_PIXELS_RGBA";
+#endif
         }
     }
     
@@ -587,4 +589,20 @@ void * ofxiOSVideoPlayer::getAVFoundationVideoPlayer() {
     return videoPlayer;
 }
 
+//---------------------------------------- DEPRECATED.
+bool ofxiOSVideoPlayer::loadMovie(string name) {
+    return load(name);
+}
+
+ofPixels & ofxiOSVideoPlayer::getPixelsRef() {
+    return getPixels();
+}
+
+const ofPixels & ofxiOSVideoPlayer::getPixelsRef() const {
+    return getPixels();
+}
+
+ofTexture * ofxiOSVideoPlayer::getTexture() {
+    return getTexturePtr();
+}
 
